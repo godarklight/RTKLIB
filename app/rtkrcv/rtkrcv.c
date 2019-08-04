@@ -793,11 +793,11 @@ static void prsatellite(vt_t *vt, int nf)
     vt_printf(vt,"\n%s%3s %2s %5s %4s",ESC_BOLD,"SAT","C1","Az","El");
     for (j=0;j<nf;j++) vt_printf(vt," L%d"    ,frq[j]);
     for (j=0;j<nf;j++) vt_printf(vt,"  Fix%d" ,frq[j]);
-    for (j=0;j<nf;j++) vt_printf(vt,"  P%dRes",frq[j]);
-    for (j=0;j<nf;j++) vt_printf(vt,"   L%dRes",frq[j]);
-    for (j=0;j<nf;j++) vt_printf(vt,"  Sl%d"  ,frq[j]);
+    for (j=0;j<nf;j++) vt_printf(vt,"          P%dRes",frq[j]);
+    for (j=0;j<nf;j++) vt_printf(vt,"          L%dRes",frq[j]);
+    for (j=0;j<nf;j++) vt_printf(vt,"   Sl%d"  ,frq[j]);
     for (j=0;j<nf;j++) vt_printf(vt,"  Lock%d",frq[j]);
-    for (j=0;j<nf;j++) vt_printf(vt," Rj%d"   ,frq[j]);
+    for (j=0;j<nf;j++) vt_printf(vt,"  Rj%d"   ,frq[j]);
     vt_printf(vt,"%s\n",ESC_RESET);
     
     for (i=0;i<MAXSAT;i++) {
@@ -812,11 +812,11 @@ static void prsatellite(vt_t *vt, int nf)
             fix=rtk.ssat[i].fix[j];
             vt_printf(vt," %5s",fix==1?"FLOAT":(fix==2?"FIX":(fix==3?"HOLD":"-")));
         }
-        for (j=0;j<nf;j++) vt_printf(vt,"%7.3f",rtk.ssat[i].resp[j]);
-        for (j=0;j<nf;j++) vt_printf(vt,"%8.4f",rtk.ssat[i].resc[j]);
-        for (j=0;j<nf;j++) vt_printf(vt," %4d",rtk.ssat[i].slipc[j]);
+        for (j=0;j<nf;j++) vt_printf(vt,"%15.3f",rtk.ssat[i].resp[j]);
+        for (j=0;j<nf;j++) vt_printf(vt,"%15.4f",rtk.ssat[i].resc[j]);
+        for (j=0;j<nf;j++) vt_printf(vt," %5d",rtk.ssat[i].slipc[j]);
         for (j=0;j<nf;j++) vt_printf(vt," %6d",rtk.ssat[i].lock [j]);
-        for (j=0;j<nf;j++) vt_printf(vt," %3d",rtk.ssat[i].rejc [j]);
+        for (j=0;j<nf;j++) vt_printf(vt," %4d",rtk.ssat[i].rejc [j]);
         vt_printf(vt,"\n");
     }
 }
@@ -936,7 +936,7 @@ static void prstream(vt_t *vt)
         "-","serial","file","tcpsvr","tcpcli","udp","ntrips","ntripc","ftp",
         "http","ntripc_s","ntripc_c"
     };
-    const char *fmt[]={"rtcm2","rtcm3","oem4","oem3","ubx","sbp","hemis","skytreq",
+    const char *fmt[]={"rtcm2","rtcm3","oem4","oem3","ubx","sbp","hemis","skytraq",
                        "gw10","javad","nvs","binex","rt17","sbf","cmr","trs","","","sp3",""};
     const char *sol[]={"llh","xyz","enu","nmea","stat","-"};
     stream_t stream[9];

@@ -6,3 +6,8 @@ Release
 Release_Build
 Debug_Build
 __history
+app/convbin/gcc
+app/pos2kml/gcc
+app/rnx2rtkp/gcc
+app/rtkrcv/gcc
+app/str2str/gcc
