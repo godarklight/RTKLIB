@@ -1360,14 +1360,21 @@ static int ddres(rtk_t *rtk, const nav_t *nav, const obsd_t *obs, double dt, con
                 else      rtk->ssat[sat[j]-1].resc[frq]=v[nv];  /* carrier phase */
 
                 /* if residual too large, flag as outlier */
-                if (opt->maxinno>0.0&&fabs(v[nv])>opt->maxinno) {
-                    if (!code) {
+                if (code)
+                {
+                    if (opt->maxinnoc>0.0&&fabs(v[nv])>opt->maxinnoc) {
+                        errmsg(rtk,"code outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",sat[i],sat[j],code?"P":"L",frq+1,v[nv]);
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (opt->maxinnop>0.0&&fabs(v[nv])>opt->maxinnop) {
                         rtk->ssat[sat[i]-1].rejc[frq]++;
                         rtk->ssat[sat[j]-1].rejc[frq]++;
+                        errmsg(rtk,"phase outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",sat[i],sat[j],code?"P":"L",frq+1,v[nv]);
+                        continue;
                     }
-                    errmsg(rtk,"outlier rejected (sat=%3d-%3d %s%d v=%.3f)\n",
-                            sat[i],sat[j],code?"P":"L",frq+1,v[nv]);
-                    continue;
                 }
                 /* single-differenced measurement error variances */
                 Ri[nv] = varerr(sat[i], sysi, azel[1+iu[i]*2], 
@@ -1819,7 +1826,7 @@ static int manage_amb_LAMBDA(rtk_t *rtk, double *bias, double *xa, const int *sa
         if (rtk->opt.arfilter) {
             rerun=0;
             /* if results are much poorer than previous epoch or dropped below ar ratio thresh, remove new sats */
-            if (nb>=0 && ar>0 && ((rtk->sol.ratio<rtk->opt.thresar[0]*1.1 && rtk->sol.ratio<rtk->sol.prev_ratio1/2.0) ||
+            if (nb>=0 && ar>0 && ((rtk->sol.ratio<rtk->opt.thresar[0]*1.1 && rtk->sol.ratio<rtk->sol.prev_ratio1*(1-rtk->opt.thresar[5])) ||
                 (rtk->sol.ratio<rtk->sol.thres && rtk->sol.prev_ratio2>=rtk->sol.thres))) {
                 trace(3,"low ratio: check for new sat\n");
                 dly=2;

@@ -228,7 +228,7 @@ static int decode_stqrawx(raw_t *raw)
 {
     unsigned char *p=raw->buff+4,ind;
     double tow,peri,pr1,cp1;
-    int i,j,ver,week,nsat,sys,sig,prn,sat,n=0;
+    int i,j,ver,week,nsat,sys,sig,prn,sat,n=0,locktime,lli;
     int gnss_type, signal_type;
     
     trace(4,"decode_stqraw: len=%d\n",raw->len);
@@ -327,11 +327,18 @@ static int decode_stqrawx(raw_t *raw)
         raw->obs.data[n].SNR[0]=U1(p+3)*4;
         raw->obs.data[n].LLI[0]=0;
         raw->obs.data[n].code[0]=sys==SYS_CMP?CODE_L1I:CODE_L1C;
-        
-        raw->lockt[sat-1][0]=ind&8?1:0; /* cycle slip */
+        locktime=(U1(p+2)>>4)&0xF;
+        raw->lockt[sat-1][0]=0;
+        if (locktime > 0)
+        {
+            locktime=(1<<locktime)/20;
+            raw->lockt[sat-1][0]=locktime;
+        }
+        lli=ind&8?1:0; /* cycle slip */
+        lli|=ind&32?2:0; /* unknown parity */
         
         if (raw->obs.data[n].L[0]!=0.0) {
-            raw->obs.data[n].LLI[0]=(unsigned char)raw->lockt[sat-1][0];
+            raw->obs.data[n].LLI[0]=(unsigned char)lli;
             raw->lockt[sat-1][0]=0;
         }
         /* receiver dependent options */

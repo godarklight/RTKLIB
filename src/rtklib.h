@@ -1112,7 +1112,8 @@ typedef struct {        /* processing options type */
     double varholdamb;  /* variance for fix-and-hold psuedo measurements (cycle^2) */
     double gainholdamb; /* gain used for GLO and SBAS sats to adjust ambiguity */
     double maxtdiff;    /* max difference of time (sec) */
-    double maxinno;     /* reject threshold of innovation (m) */
+    double maxinnop;     /* reject threshold of innovation phase (m) */
+    double maxinnoc;     /* reject threshold of innovation code (m) */
     double maxgdop;     /* reject threshold of gdop */
     double baseline[2]; /* baseline length constraint {const,sigma} (m) */
     double ru[3];       /* rover position for fixed mode {x,y,z} (ecef) (m) */
